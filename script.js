@@ -29,6 +29,16 @@ function onAddItemSubmit(e) {
 	}
 	// console.log('success');
 
+	// Check for edit mode
+	if (isEditMode) {
+		const itemToEdit = itemList.querySelector('.edit-mode');
+
+		removeItemFromStorage(itemToEdit.textContent);
+		itemToEdit.classList.remove('edit-mode');
+		itemToEdit.remove();
+		isEditMode = false;
+	}
+
 	// // Create new list item
 	// const li = document.createElement("li");
 	// li.appendChild(document.createTextNode(newItem));
@@ -216,6 +226,8 @@ function filterItems(e) {
 }
 
 function checkUI() {
+	itemInput.value = '';
+	
 	// Has to be defined in this func because it will check the amount of items whenever its called
 	const items = itemList.querySelectorAll("li");
 	// console.log(items);
@@ -226,6 +238,11 @@ function checkUI() {
 		clearBtn.style.display = "block";
 		itemFilter.style.display = "block";
 	}
+
+	formBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Add Item';
+	formBtn.style.backgroundColor = '#333';
+
+	isEditMode = false;
 }
 
 // Initialise app
