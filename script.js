@@ -3,6 +3,7 @@ const itemForm = document.getElementById("item-form");
 const itemInput = document.getElementById("item-input");
 const itemList = document.getElementById("item-list");
 const clearBtn = document.getElementById("clear");
+const itemFilter = document.getElementById("filter");
 
 function addItem(e) {
 	// Prevents default behaviour of form submit event
@@ -30,7 +31,10 @@ function addItem(e) {
 	li.appendChild(button);
 
 	// Add the new list item to the overall itemList
+	// Adding li to the DOM
 	itemList.appendChild(li);
+
+	checkUI();
 
 	// Reset input value
 	itemInput.value = "";
@@ -57,18 +61,39 @@ function createIcon(classes) {
 function removeItem(e) {
 	// console.log(e.target);
 	if (e.target.parentElement.classList.contains("remove-item")) {
-		e.target.parentElement.parentElement.remove();
+		if (confirm('Are you sure?')) {
+			e.target.parentElement.parentElement.remove();
+
+			checkUI();
+		}
 	}
 }
 
 function clearItems() {
-    // console.log('works');
-    // itemList.innerHTML = '';
-    // While the item list has a first child
-    while (itemList.firstChild) {
-        // remove the first child from the itemlist 
-        itemList.removeChild(itemList.firstChild)
-    }
+	// console.log('works');
+	// itemList.innerHTML = '';
+	// While the item list has a first child
+	if (confirm('Are you sure?')) {
+		while (itemList.firstChild) {
+			// remove the first child from the itemlist
+			itemList.removeChild(itemList.firstChild);
+		}
+		checkUI();
+	}
+	
+}
+
+function checkUI() {
+	// Has to be defined in this func because it will check the amount of items whenever its called
+	const items = itemList.querySelectorAll("li");
+	console.log(items);
+	if (items.length === 0) {
+		clearBtn.style.display = "none";
+		itemFilter.style.display = "none";
+	} else {
+		clearBtn.style.display = "block";
+		itemFilter.style.display = "block";
+	}
 }
 
 // Event listeners
@@ -77,3 +102,5 @@ itemForm.addEventListener("submit", addItem);
 itemList.addEventListener("click", removeItem);
 
 clearBtn.addEventListener("click", clearItems);
+
+checkUI();
