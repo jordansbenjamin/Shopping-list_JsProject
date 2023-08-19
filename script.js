@@ -61,7 +61,7 @@ function createIcon(classes) {
 function removeItem(e) {
 	// console.log(e.target);
 	if (e.target.parentElement.classList.contains("remove-item")) {
-		if (confirm('Are you sure?')) {
+		if (confirm("Are you sure?")) {
 			e.target.parentElement.parentElement.remove();
 
 			checkUI();
@@ -73,14 +73,34 @@ function clearItems() {
 	// console.log('works');
 	// itemList.innerHTML = '';
 	// While the item list has a first child
-	if (confirm('Are you sure?')) {
+	if (confirm("Are you sure?")) {
 		while (itemList.firstChild) {
 			// remove the first child from the itemlist
 			itemList.removeChild(itemList.firstChild);
 		}
 		checkUI();
 	}
-	
+}
+
+function filterItems(e) {
+	const items = itemList.querySelectorAll("li");
+	const text = e.target.value.toLowerCase();
+
+	items.forEach(item => {
+		// console.log(item);
+		const itemName = item.firstChild.textContent.toLowerCase();
+		// console.log(itemName);
+
+		if (itemName.indexOf(text) !== -1) {
+			// console.log(true);
+			item.style.display = 'flex'
+		} else {
+			// console.log(false);
+			item.style.display = 'none';
+		}
+	})
+
+	// console.log(text);
 }
 
 function checkUI() {
@@ -102,5 +122,7 @@ itemForm.addEventListener("submit", addItem);
 itemList.addEventListener("click", removeItem);
 
 clearBtn.addEventListener("click", clearItems);
+
+itemFilter.addEventListener('input', filterItems);
 
 checkUI();
