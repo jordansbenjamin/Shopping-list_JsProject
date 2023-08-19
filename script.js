@@ -31,12 +31,17 @@ function onAddItemSubmit(e) {
 
 	// Check for edit mode
 	if (isEditMode) {
-		const itemToEdit = itemList.querySelector('.edit-mode');
+		const itemToEdit = itemList.querySelector(".edit-mode");
 
 		removeItemFromStorage(itemToEdit.textContent);
-		itemToEdit.classList.remove('edit-mode');
+		itemToEdit.classList.remove("edit-mode");
 		itemToEdit.remove();
 		isEditMode = false;
+	} else {
+		if (checkIfItemExists(newItem)) {
+			alert("That item already exists!");
+			return;
+		}
 	}
 
 	// // Create new list item
@@ -142,6 +147,16 @@ function onClickItem(e) {
 	}
 }
 
+function checkIfItemExists(item) {
+	const itemsFromStorage = getItemsFromStorage();
+	return itemsFromStorage.includes(item);
+	// if (itemsFromStorage.includes(item)) {
+	// 	return true;
+	// } else {
+	// 	return false;
+	// }
+}
+
 function setItemToEdit(item) {
 	isEditMode = true;
 
@@ -226,8 +241,8 @@ function filterItems(e) {
 }
 
 function checkUI() {
-	itemInput.value = '';
-	
+	itemInput.value = "";
+
 	// Has to be defined in this func because it will check the amount of items whenever its called
 	const items = itemList.querySelectorAll("li");
 	// console.log(items);
@@ -240,7 +255,7 @@ function checkUI() {
 	}
 
 	formBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Add Item';
-	formBtn.style.backgroundColor = '#333';
+	formBtn.style.backgroundColor = "#333";
 
 	isEditMode = false;
 }
