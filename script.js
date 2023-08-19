@@ -5,7 +5,7 @@ const itemList = document.getElementById("item-list");
 const clearBtn = document.getElementById("clear");
 const itemFilter = document.getElementById("filter");
 
-function addItem(e) {
+function onAddItemSubmit(e) {
 	// Prevents default behaviour of form submit event
 	e.preventDefault();
 
@@ -19,9 +19,37 @@ function addItem(e) {
 	}
 	// console.log('success');
 
+	// // Create new list item
+	// const li = document.createElement("li");
+	// li.appendChild(document.createTextNode(newItem));
+	// // console.log(li);
+
+	// // Create new button
+	// const button = createButton("remove-item btn-link text-red");
+	// // console.log(button);
+	// // Add new button to list
+	// li.appendChild(button);
+
+	// // Add the new list item to the overall itemList
+	// // Adding li to the DOM
+	// itemList.appendChild(li);
+
+	// Create item DOM element
+	addItemToDOM(newItem);
+
+	// Add item to local storage
+	addItemToStorage(newItem);
+
+	checkUI();
+
+	// Reset input value
+	itemInput.value = "";
+}
+
+function addItemToDOM(item) {
 	// Create new list item
 	const li = document.createElement("li");
-	li.appendChild(document.createTextNode(newItem));
+	li.appendChild(document.createTextNode(item));
 	// console.log(li);
 
 	// Create new button
@@ -33,11 +61,23 @@ function addItem(e) {
 	// Add the new list item to the overall itemList
 	// Adding li to the DOM
 	itemList.appendChild(li);
+}
 
-	checkUI();
+function addItemToStorage(item) {
+	let itemsFromStorage;
 
-	// Reset input value
-	itemInput.value = "";
+	// Check if there are no items in storage
+	if (localStorage.getItem("items") === null) {
+		// If there isn't then it becomes empty array
+		itemsFromStorage = [];
+	} else {
+		itemsFromStorage = JSON.parse(localStorage.getItem("items"));
+	}
+	// Add new item to array
+	itemsFromStorage.push(item);
+
+	// Convert to JSON string and set to local storage
+	localStorage.setItem("items", JSON.stringify(itemsFromStorage));
 }
 
 function createButton(classes) {
@@ -86,19 +126,19 @@ function filterItems(e) {
 	const items = itemList.querySelectorAll("li");
 	const text = e.target.value.toLowerCase();
 
-	items.forEach(item => {
+	items.forEach((item) => {
 		// console.log(item);
 		const itemName = item.firstChild.textContent.toLowerCase();
 		// console.log(itemName);
 
 		if (itemName.indexOf(text) !== -1) {
 			// console.log(true);
-			item.style.display = 'flex'
+			item.style.display = "flex";
 		} else {
 			// console.log(false);
-			item.style.display = 'none';
+			item.style.display = "none";
 		}
-	})
+	});
 
 	// console.log(text);
 }
@@ -106,7 +146,7 @@ function filterItems(e) {
 function checkUI() {
 	// Has to be defined in this func because it will check the amount of items whenever its called
 	const items = itemList.querySelectorAll("li");
-	console.log(items);
+	// console.log(items);
 	if (items.length === 0) {
 		clearBtn.style.display = "none";
 		itemFilter.style.display = "none";
@@ -117,12 +157,13 @@ function checkUI() {
 }
 
 // Event listeners
-itemForm.addEventListener("submit", addItem);
+// itemForm.addEventListener("submit", addItem);
+itemForm.addEventListener("submit", onAddItemSubmit);
 
 itemList.addEventListener("click", removeItem);
 
 clearBtn.addEventListener("click", clearItems);
 
-itemFilter.addEventListener('input', filterItems);
+itemFilter.addEventListener("input", filterItems);
 
 checkUI();
